@@ -1,0 +1,5 @@
+install the required packages
+
+run cmd from the folder
+
+type: nodemon index
