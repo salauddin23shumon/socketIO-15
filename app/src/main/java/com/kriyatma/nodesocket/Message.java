@@ -2,59 +2,37 @@ package com.kriyatma.nodesocket;
 
 import android.graphics.Bitmap;
 
-/**
- * Created by sreejeshpillai on 10/05/15.
- */
 public class Message {
 
-    public static final int TYPE_MESSAGE = 0;
-    public static final int TYPE_LOG = 1;
-    public static final int TYPE_ACTION = 2;
+    private String message;
+    private Bitmap bitmap;
 
-    private int mType;
-    private String mMessage;
-    private Bitmap mImage;
 
-    private Message() {}
+    public Message(String message, Bitmap bitmap) {
+        this.message = message;
+        this.bitmap = bitmap;
+    }
 
-    public int getType() {
-        return mType;
-    };
+    public Message(String message) {
+        this.message = message;
+    }
+
+    public Message() {
+    }
 
     public String getMessage() {
-        return mMessage;
-    };
+        return message;
+    }
 
-    public Bitmap getImage() {
-        return mImage;
-    };
+    public void setMessage(String message) {
+        this.message = message;
+    }
 
+    public Bitmap getBitmap() {
+        return bitmap;
+    }
 
-    public static class Builder {
-        private final int mType;
-        private Bitmap mImage;
-        private String mMessage;
-
-        public Builder(int type) {
-            mType = type;
-        }
-
-        public Builder image(Bitmap image) {
-            mImage = image;
-            return this;
-        }
-
-        public Builder message(String message) {
-            mMessage = message;
-            return this;
-        }
-
-        public Message build() {
-            Message message = new Message();
-            message.mType = mType;
-            message.mImage = mImage;
-            message.mMessage = mMessage;
-            return message;
-        }
+    public void setBitmap(Bitmap bitmap) {
+        this.bitmap = bitmap;
     }
 }

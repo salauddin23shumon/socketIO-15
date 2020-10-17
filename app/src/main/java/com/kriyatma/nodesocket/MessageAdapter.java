@@ -1,92 +1,82 @@
 package com.kriyatma.nodesocket;
 
-import android.content.Context;
 import android.graphics.Bitmap;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
-
-public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHolder> {
+public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MyViewHolder> {
 
     private List<Message> mMessages;
-    private int[] mUsernameColors;
+    public static final String TAG = "MessageAdapter";
 
-    public MessageAdapter(List<Message> messages) {
-        mMessages = messages;
-      //  mUsernameColors = context.getResources().getIntArray(R.array.username_colors);
+    public MessageAdapter(List<Message> mMessages) {
+        this.mMessages = mMessages;
     }
 
+
+    @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        int layout = -1;
-        /*switch (viewType) {
-            case Message.TYPE_MESSAGE:
-                layout = R.layout.item_message;
-                break;
-            case Message.TYPE_LOG:
-                layout = R.layout.item_log;
-                break;
-            case Message.TYPE_ACTION:
-                layout = R.layout.item_action;
-                break;
-        }*/
-        View v = LayoutInflater
+    public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view = LayoutInflater
                 .from(parent.getContext())
                 .inflate(R.layout.layout_message, parent, false);
-        return new ViewHolder(v);
+        return new MessageAdapter.MyViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder viewHolder, int position) {
+    public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         Message message = mMessages.get(position);
-        viewHolder.setMessage(message.getMessage());
-        viewHolder.setImage(message.getImage());
+//        Message message = mMessages.get(position);
+        holder.setMessage(message.getMessage());
+        if (message.getBitmap() != null)
+            holder.setImage(message.getBitmap());
     }
 
     @Override
     public int getItemCount() {
+        Log.d(TAG, "getItemCount: " + mMessages.size());
         return mMessages.size();
     }
 
-    @Override
-    public int getItemViewType(int position) {
-        return mMessages.get(position).getType();
+
+    public void updateMsg(List<Message> mMessages) {
+        this.mMessages = mMessages;
+        notifyDataSetChanged();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public class MyViewHolder extends RecyclerView.ViewHolder {
+
         private ImageView mImageView;
         private TextView mMessageView;
-        public ViewHolder(View itemView) {
+
+        public MyViewHolder(@NonNull View itemView) {
             super(itemView);
             mImageView = (ImageView) itemView.findViewById(R.id.image);
             mMessageView = (TextView) itemView.findViewById(R.id.message);
         }
 
         public void setMessage(String message) {
-            if (null == mMessageView) return;
-            if(null == message) return;
-            mMessageView.setText(message);
+            if (message == null)
+                return;
+            else
+                mMessageView.setText(message);
         }
 
-        public void setImage(Bitmap bmp){
-            if(null == mImageView) return;
-            if(null == bmp) return;
-            mImageView.setImageBitmap(bmp);
-        }
-        private int getUsernameColor(String username) {
-            int hash = 7;
-            for (int i = 0, len = username.length(); i < len; i++) {
-                hash = username.codePointAt(i) + (hash << 5) - hash;
-            }
-            int index = Math.abs(hash % mUsernameColors.length);
-            return mUsernameColors[index];
+        public void setImage(Bitmap bmp) {
+            if (bmp == null) {
+                Log.d(TAG, "setImage: no image");
+                return;
+            } else
+                mImageView.setImageBitmap(bmp);
         }
     }
 }
